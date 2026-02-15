@@ -29,26 +29,26 @@ public class SubjectController {
     }
 
     @GetMapping("{id}")
-    public Subject getSubjectsById(@PathVariable int id){
+    public Subject getSubjectsById(@PathVariable Long id){
         return subjectService.getSubjectsById(id);
     }
 
     @PostMapping
-    public List<Subject> createSubject(@Valid @RequestBody SubjectDTO subjectDTO){
+    public Subject createSubject(@Valid @RequestBody SubjectDTO subjectDTO){
 
 //        mapping subject DTO to subject
 //        Subject subject = new Subject();
 //        subject .setSubjectName(subjectDTO.getSubjectName());
 //        subject.setDescription(subjectDTO.getDescription());
 
-//        do that mapping using model mapper
+        // do that mapping using model mapper
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
 
         return subjectService.createSubject(subject);
     }
 
     @PutMapping("{id}")
-    public Subject updateSubject(@PathVariable int id,@Valid @RequestBody SubjectDTO subjectDTO){
+    public Subject updateSubject(@PathVariable Long id,@Valid @RequestBody SubjectDTO subjectDTO){
 
         Subject updatedSubject = modelMapper.map(subjectDTO,Subject.class);
         return subjectService.updateSubject(id,updatedSubject);
@@ -56,7 +56,7 @@ public class SubjectController {
     }
 
     @DeleteMapping("{id}")
-    public List<Subject> deleteSubject(@PathVariable int id){
-        return subjectService.deleteSubject(id);
+    public void deleteSubject(@PathVariable Long id){
+        subjectService.deleteSubject(id);
     }
 }

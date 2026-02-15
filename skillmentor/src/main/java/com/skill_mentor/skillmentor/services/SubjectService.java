@@ -1,39 +1,47 @@
 package com.skill_mentor.skillmentor.services;
 
 import com.skill_mentor.skillmentor.entities.Subject;
+import com.skill_mentor.skillmentor.repositories.SubjectRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+
 public class SubjectService {
 
-    private final List<Subject> subjects = new ArrayList<>((
-            List.of(new Subject("Maths" , "MT 001"),
-                    new Subject("Computer Science" , "CS 001"))
-    ));
+    private final SubjectRepository subjectRepository;
+
 
     public List<Subject> getAllSubjects(){
-        return subjects;
+        return subjectRepository.findAll();
     }
 
-    public List<Subject> createSubject(Subject subject){
-        subjects.add(subject);
-        return subjects;
+    public Subject createSubject(Subject subject){
+        return subjectRepository.save(subject);
+
     }
 
-    public Subject getSubjectsById(int id){
-        return subjects.get(id);
+    public Subject getSubjectsById(Long id){
+        return subjectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
     }
 
-    public Subject updateSubject(int id , Subject subject){
-        subjects.set(id,subject);
-        return subject;
+    public Subject updateSubject(Long id , Subject subject){
+
+        Subject existingSubject = subjectRepository.findById(id)
+                .orElseThrow(() ->new RuntimeException("Subject Not Found"));
+
+        existingSubject.setSubjectName(subject.getSubjectName());
+        existingSubject.setDescription(subject.getDescription());
+
+        return subjectRepository.save(existingSubject);
     }
 
-    public List<Subject> deleteSubject(int id){
-        subjects.remove(id);
-        return subjects;
+    public void deleteSubject(Long id){
+        subjectRepository.deleteById(id);
     }
 }
