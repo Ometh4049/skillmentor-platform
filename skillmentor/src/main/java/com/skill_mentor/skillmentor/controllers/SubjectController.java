@@ -2,6 +2,7 @@ package com.skill_mentor.skillmentor.controllers;
 
 import com.skill_mentor.skillmentor.dto.SubjectDTO;
 import com.skill_mentor.skillmentor.entities.Subject;
+import com.skill_mentor.skillmentor.services.SubjectService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -15,25 +16,22 @@ public class SubjectController {
 
     private final ModelMapper modelMapper;
 
-    private final List<Subject> subjects = new ArrayList<>((
-            List.of(new Subject("Maths" , "MT 001"),
-                    new Subject("Computer Science" , "CS 001"))
-    ));
+    private final SubjectService  subjectService;
 
-    public SubjectController(ModelMapper modelMapper) {
+    public SubjectController(ModelMapper modelMapper, SubjectService subjectService) {
         this.modelMapper = modelMapper;
+        this.subjectService = subjectService;
     }
 
     @GetMapping
     public List<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){
-        return subjects;
+        return subjectService.getAllSubjects();
     }
 
-//    including path parameter & query parameter
-//    @GetMapping("{id}")
-//    public List<Subject> getAllSubjectsById(@PathVariable int id){
-//        return subjects.get(id);
-//    }
+    @GetMapping("{id}")
+    public Subject getSubjectsById(@PathVariable int id){
+        return subjectService.getSubjectsById(id);
+    }
 
     @PostMapping
     public List<Subject> createSubject(@Valid @RequestBody SubjectDTO subjectDTO){
@@ -46,20 +44,19 @@ public class SubjectController {
 //        do that mapping using model mapper
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
 
-        subjects.add(subject);
-        return subjects;
+        return subjectService.createSubject(subject);
     }
 
-//    @PutMapping("{id}")
-//    public Subject updateSubject(@PathVariable int id,@RequestBody String subject){
-//        subjects.set(id ,subject);
-//        return "subject updated";
-//    }
-//
-//    @DeleteMapping("{id}")
-//    public Subject deleteSubject(@PathVariable int id){
-//        subjects.remove(id);
-//
-//        return subjects.toString();
-//    }
+    @PutMapping("{id}")
+    public Subject updateSubject(@PathVariable int id,@Valid @RequestBody SubjectDTO subjectDTO){
+
+        Subject updatedSubject = modelMapper.map(subjectDTO,Subject.class);
+        return subjectService.updateSubject(id,updatedSubject);
+
+    }
+
+    @DeleteMapping("{id}")
+    public List<Subject> deleteSubject(@PathVariable int id){
+        return subjectService.deleteSubject(id);
+    }
 }
