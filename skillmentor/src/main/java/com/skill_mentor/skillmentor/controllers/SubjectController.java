@@ -1,5 +1,9 @@
 package com.skill_mentor.skillmentor.controllers;
 
+import com.skill_mentor.skillmentor.dto.SubjectDTO;
+import com.skill_mentor.skillmentor.entities.Subject;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,38 +13,53 @@ import java.util.List;
 @RequestMapping(path= "api/v1/subjects")
 public class SubjectController {
 
-    private final List<String> subjects = new ArrayList<>((
-            List.of("Maths","Physics","Chemistry")
+    private final ModelMapper modelMapper;
+
+    private final List<Subject> subjects = new ArrayList<>((
+            List.of(new Subject("Maths" , "MT 001"),
+                    new Subject("Computer Science" , "CS 001"))
     ));
 
+    public SubjectController(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
     @GetMapping
-    public String getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){
-        return subjects.toString();
+    public List<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){
+        return subjects;
     }
 
 //    including path parameter & query parameter
-    @GetMapping("{id}")
-    public String getAllSubjectsById(@PathVariable int id){
-        return subjects.get(id);
-    }
+//    @GetMapping("{id}")
+//    public List<Subject> getAllSubjectsById(@PathVariable int id){
+//        return subjects.get(id);
+//    }
 
     @PostMapping
-    public String createSubject(@RequestBody String subject){
+    public List<Subject> createSubject(@Valid @RequestBody SubjectDTO subjectDTO){
+
+//        mapping subject DTO to subject
+//        Subject subject = new Subject();
+//        subject .setSubjectName(subjectDTO.getSubjectName());
+//        subject.setDescription(subjectDTO.getDescription());
+
+//        do that mapping using model mapper
+        Subject subject = modelMapper.map(subjectDTO, Subject.class);
+
         subjects.add(subject);
-        System.out.println("Subject created ");
-        return subjects.toString();
+        return subjects;
     }
 
-    @PutMapping("{id}")
-    public String updateSubject(@PathVariable int id,@RequestBody String subject){
-        subjects.set(id ,subject);
-        return "subject updated";
-    }
-
-    @DeleteMapping("{id}")
-    public String deleteSubject(@PathVariable int id){
-        subjects.remove(id);
-
-        return subjects.toString();
-    }
+//    @PutMapping("{id}")
+//    public Subject updateSubject(@PathVariable int id,@RequestBody String subject){
+//        subjects.set(id ,subject);
+//        return "subject updated";
+//    }
+//
+//    @DeleteMapping("{id}")
+//    public Subject deleteSubject(@PathVariable int id){
+//        subjects.remove(id);
+//
+//        return subjects.toString();
+//    }
 }
