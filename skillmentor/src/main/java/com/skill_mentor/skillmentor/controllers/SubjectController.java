@@ -50,6 +50,7 @@ public class SubjectController {
     @PutMapping("{id}")
     public Subject updateSubject(@PathVariable Long id,@Valid @RequestBody SubjectDTO subjectDTO){
 
+
         Subject updatedSubject = modelMapper.map(subjectDTO,Subject.class);
         return subjectService.updateSubject(id,updatedSubject);
 
