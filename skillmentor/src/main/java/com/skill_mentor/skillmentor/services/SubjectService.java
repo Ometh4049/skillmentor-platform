@@ -3,6 +3,7 @@ package com.skill_mentor.skillmentor.services;
 import com.skill_mentor.skillmentor.entities.Subject;
 import com.skill_mentor.skillmentor.repositories.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,10 +11,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class SubjectService {
 
     private final SubjectRepository subjectRepository;
+    private final ModelMapper modelMapper;
 
 
     public List<Subject> getAllSubjects(){
@@ -34,6 +35,7 @@ public class SubjectService {
 
         Subject existingSubject = subjectRepository.findById(id)
                 .orElseThrow(() ->new RuntimeException("Subject Not Found"));
+
 
         existingSubject.setSubjectName(subject.getSubjectName());
         existingSubject.setDescription(subject.getDescription());
