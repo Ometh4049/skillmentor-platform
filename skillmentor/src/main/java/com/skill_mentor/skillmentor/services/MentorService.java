@@ -46,12 +46,19 @@ public class MentorService {
 
     public Mentor updateMentor(Long id, Mentor mentor){
 
-        Mentor existingMentor = mentorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+        try {
+            Mentor existingMentor = mentorRepository.findById(id).get();
 
-        modelMapper.map(mentor,existingMentor);
+            modelMapper.map(mentor,existingMentor);
 
-        return mentorRepository.save(existingMentor);
+            return mentorRepository.save(existingMentor);
+
+        }catch (Exception exception){
+            System.err.println("Error Update Mentor " + exception.getMessage());
+            throw new SkillMentorException("Failed to update mentor", HttpStatus.NOT_FOUND);
+        }
+
+
 
     }
 
@@ -59,6 +66,13 @@ public class MentorService {
 //        Mentor mentor = mentorRepository.findById(id)
 //                .orElseThrow(() -> new RuntimeException("Mentor not found"));
 
-        mentorRepository.deleteById(id);
+        try {
+            Mentor existingMentor = mentorRepository.findById(id).get();
+            mentorRepository.delete(existingMentor);
+        } catch (Exception exception) {
+            System.err.println("Error delete Mentor " + exception.getMessage());
+            throw new SkillMentorException("Failed to delete mentor", HttpStatus.NOT_FOUND);
+        }
+
     }
 }
