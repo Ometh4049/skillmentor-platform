@@ -1,48 +1,18 @@
 package com.skill_mentor.skillmentor.services;
 
 import com.skill_mentor.skillmentor.entities.Mentor;
-import com.skill_mentor.skillmentor.repositories.MentorRepository;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class MentorService {
+public interface MentorService {
 
-    private final MentorRepository mentorRepository;
-    private final ModelMapper modelMapper;
+    List<Mentor> getAllMentors();
 
-    public List<Mentor> getAllMentors(){
-        return mentorRepository.findAll();
-    }
+    Mentor getMentorById(Long id);
 
-    public Mentor getMentorById(Long id){
-        return mentorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
-    }
+    Mentor createMentor(Mentor mentor);
 
-    public Mentor createMentor(Mentor mentor){
-        return mentorRepository.save(mentor);
-    }
+    Mentor updateMentorById(Long id, Mentor mentor);
 
-    public Mentor updateMentor(Long id, Mentor mentor){
-
-        Mentor existingMentor = mentorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
-
-        modelMapper.map(mentor,existingMentor);
-
-        return mentorRepository.save(existingMentor);
-
-    }
-
-    public void deleteMentor(Long id){
-//        Mentor mentor = mentorRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Mentor not found"));
-
-        mentorRepository.deleteById(id);
-    }
+    void deleteMentor(Long id);
 }
