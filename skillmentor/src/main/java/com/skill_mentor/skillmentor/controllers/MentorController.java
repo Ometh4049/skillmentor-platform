@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path= "api/v1/mentors")
-public class MentorController {
+public class MentorController extends AbstractController{
 
     private final ModelMapper modelMapper;
 

@@ -1,9 +1,11 @@
 package com.skill_mentor.skillmentor.services;
 
 import com.skill_mentor.skillmentor.entities.Mentor;
+import com.skill_mentor.skillmentor.exception.SkillMentorException;
 import com.skill_mentor.skillmentor.repositories.MentorRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +22,26 @@ public class MentorService {
     }
 
     public Mentor getMentorById(Long id){
-        return mentorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mentor not found"));
+
+        try {
+            return mentorRepository.findById(id).get();
+        } catch (Exception exception) {
+            System.err.println("Error getting Mentor " + exception.getMessage());
+            throw new SkillMentorException("Failed to get mentor", HttpStatus.NOT_FOUND);
+        }
+
+
     }
 
     public Mentor createMentor(Mentor mentor){
-        return mentorRepository.save(mentor);
+
+        try {
+            return mentorRepository.save(mentor);
+        } catch (Exception exception) {
+            System.err.println("Error creating Mentor " + exception.getMessage());
+            throw new SkillMentorException("Failed to Create new mentor", HttpStatus.CONFLICT);
+        }
+
     }
 
     public Mentor updateMentor(Long id, Mentor mentor){
