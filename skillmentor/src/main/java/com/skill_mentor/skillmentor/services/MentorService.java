@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface MentorService {
 
-    public List<Mentor> getAllMentors();
+    List<Mentor> getAllMentors();
 
-    public Mentor getMentorById(Long id);
+    Mentor getMentorById(Long id);
 
-    public Mentor createMentor(Mentor mentor);
+    Mentor createMentor(Mentor mentor);
 
-    public Mentor updateMentorById(Long id, Mentor mentor);
+    Mentor updateMentorById(Long id, Mentor mentor);
 
-    public void deleteMentor(Long id);
+    void deleteMentor(Long id);
 }

@@ -2,7 +2,7 @@ package com.skill_mentor.skillmentor.controllers;
 
 import com.skill_mentor.skillmentor.dto.SubjectDTO;
 import com.skill_mentor.skillmentor.entities.Subject;
-import com.skill_mentor.skillmentor.services.impl.SubjectServiceImpl;
+import com.skill_mentor.skillmentor.services.SubjectService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -15,21 +15,21 @@ public class SubjectController {
 
     private final ModelMapper modelMapper;
 
-    private final SubjectServiceImpl subjectServiceImpl;
+    private final SubjectService subjectService;
 
-    public SubjectController(ModelMapper modelMapper, SubjectServiceImpl subjectServiceImpl) {
+    public SubjectController(ModelMapper modelMapper, SubjectService subjectService) {
         this.modelMapper = modelMapper;
-        this.subjectServiceImpl = subjectServiceImpl;
+        this.subjectService = subjectService;
     }
 
     @GetMapping
     public List<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){
-        return subjectServiceImpl.getAllSubjects();
+        return subjectService.getAllSubjects();
     }
 
     @GetMapping("{id}")
     public Subject getSubjectsById(@PathVariable Long id){
-        return subjectServiceImpl.getSubjectsById(id);
+        return subjectService.getSubjectsById(id);
     }
 
     @PostMapping
@@ -43,7 +43,7 @@ public class SubjectController {
         // do that mapping using model mapper
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
 
-        return subjectServiceImpl.createSubject(subject);
+        return subjectService.createSubject(subject);
     }
 
     @PutMapping("{id}")
@@ -51,12 +51,12 @@ public class SubjectController {
 
 
         Subject updatedSubject = modelMapper.map(subjectDTO,Subject.class);
-        return subjectServiceImpl.updateSubject(id,updatedSubject);
+        return subjectService.updateSubject(id,updatedSubject);
 
     }
 
     @DeleteMapping("{id}")
     public void deleteSubject(@PathVariable Long id){
-        subjectServiceImpl.deleteSubject(id);
+        subjectService.deleteSubject(id);
     }
 }

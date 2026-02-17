@@ -3,6 +3,7 @@ package com.skill_mentor.skillmentor.services.impl;
 import com.skill_mentor.skillmentor.entities.Mentor;
 import com.skill_mentor.skillmentor.exception.SkillMentorException;
 import com.skill_mentor.skillmentor.repositories.MentorRepository;
+import com.skill_mentor.skillmentor.services.MentorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MentorServiceImpl {
+public class MentorServiceImpl implements MentorService {
 
     private final MentorRepository mentorRepository;
     private final ModelMapper modelMapper;

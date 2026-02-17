@@ -2,6 +2,7 @@ package com.skill_mentor.skillmentor.services.impl;
 
 import com.skill_mentor.skillmentor.entities.Subject;
 import com.skill_mentor.skillmentor.repositories.SubjectRepository;
+import com.skill_mentor.skillmentor.services.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SubjectServiceImpl {
+public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
     private final ModelMapper modelMapper;

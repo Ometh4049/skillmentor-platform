@@ -6,13 +6,14 @@ import java.util.List;
 
 public interface SubjectService {
 
-    public List<Subject> getAllSubjects();
 
-    public Subject createSubject(Subject subject);
+    List<Subject> getAllSubjects();
 
-    public Subject getSubjectsById(Long id);
+    Subject createSubject(Subject subject);
 
-    public Subject updateSubject(Long id , Subject subject);
+    Subject getSubjectsById(Long id);
 
-    public void deleteSubject(Long id);
+    Subject updateSubject(Long id , Subject subject);
+
+    void deleteSubject(Long id);
 }
