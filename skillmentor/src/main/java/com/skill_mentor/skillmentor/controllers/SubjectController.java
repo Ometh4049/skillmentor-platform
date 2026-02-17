@@ -4,23 +4,22 @@ import com.skill_mentor.skillmentor.dto.SubjectDTO;
 import com.skill_mentor.skillmentor.entities.Subject;
 import com.skill_mentor.skillmentor.services.SubjectService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path= "api/v1/subjects")
+@RequiredArgsConstructor
+@Validated
 public class SubjectController {
 
     private final ModelMapper modelMapper;
 
     private final SubjectService subjectService;
-
-    public SubjectController(ModelMapper modelMapper, SubjectService subjectService) {
-        this.modelMapper = modelMapper;
-        this.subjectService = subjectService;
-    }
 
     @GetMapping
     public List<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){

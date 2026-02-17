@@ -4,24 +4,24 @@ import com.skill_mentor.skillmentor.dto.MentorDTO;
 import com.skill_mentor.skillmentor.entities.Mentor;
 import com.skill_mentor.skillmentor.services.MentorService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path= "api/v1/mentors")
+@RequiredArgsConstructor
+@Validated
 public class MentorController extends AbstractController{
 
     private final ModelMapper modelMapper;
 
     private final MentorService mentorService;
 
-    public MentorController(ModelMapper modelMapper, MentorService mentorService) {
-        this.modelMapper = modelMapper;
-        this.mentorService = mentorService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Mentor>> getAllMentors(){
