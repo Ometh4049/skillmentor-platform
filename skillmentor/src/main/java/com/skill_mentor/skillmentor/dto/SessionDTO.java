@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class SessionDTO {
 
     @NotNull(message = "Student ID cannot be null")
-    private Integer studentId;
+    private Long studentId;
 
     @NotNull(message = "Mentor ID cannot be null")
     private Long mentorId;
@@ -23,7 +24,7 @@ public class SessionDTO {
     private Long subjectId;
 
     @NotNull(message = "Session date/time cannot be null")
-    private LocalDateTime sessionAt;
+    private Date sessionAt;
 
     @Min(value = 1, message = "Duration must be at least 1 minute")
     private Integer durationMinutes;

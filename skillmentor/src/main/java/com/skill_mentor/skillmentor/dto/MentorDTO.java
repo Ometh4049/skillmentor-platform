@@ -4,8 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +39,6 @@ public class MentorDTO {
     @Pattern(regexp = "^[0-9+]{8,15}$", message = "Invalid phone number")
     private String phoneNumber;
 
-    private LocalDateTime availabilityStart;
-    private LocalDateTime availabilityEnd;
+    private Date availabilityStart;
+    private Date availabilityEnd;
 }

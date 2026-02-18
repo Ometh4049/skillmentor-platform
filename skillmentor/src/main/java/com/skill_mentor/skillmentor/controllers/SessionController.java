@@ -5,7 +5,6 @@ import com.skill_mentor.skillmentor.entities.Session;
 import com.skill_mentor.skillmentor.services.SessionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class SessionController extends AbstractController {
 
     private final SessionService sessionService;
-    private final ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<Page<Session>> getAlSessions(Pageable pageable) {
@@ -37,9 +35,7 @@ public class SessionController extends AbstractController {
     @PostMapping
     public ResponseEntity<Session> createSession(@Valid @RequestBody SessionDTO sessionDTO) {
 
-        Session session = modelMapper.map(sessionDTO, Session.class);
-
-        Session createdSession = sessionService.createNewSession(session);
+        Session createdSession = sessionService.createNewSession(sessionDTO);
 
         return sendCreatedResponse(createdSession);
     }
@@ -47,8 +43,7 @@ public class SessionController extends AbstractController {
     @PutMapping("{id}")
     public ResponseEntity<Session> updateSessionById(@PathVariable Long id, @Valid @RequestBody SessionDTO sessionDTO) {
 
-        Session session = modelMapper.map(sessionDTO, Session.class);
-        Session updatedSession = sessionService.updateSessionById(id, session);
+        Session updatedSession = sessionService.updateSessionById(id, sessionDTO);
 
         return sendOkResponse(updatedSession);
     }

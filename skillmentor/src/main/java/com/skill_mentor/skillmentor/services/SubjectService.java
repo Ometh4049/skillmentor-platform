@@ -4,7 +4,6 @@ import com.skill_mentor.skillmentor.entities.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface SubjectService {
 

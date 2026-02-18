@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface SessionService {
 
-    Session createNewSession(Session session);
+    Session createNewSession(SessionDTO sessionDTO);
 
     Page<Session> getAllSessions(Pageable pageable);
 
     Session getSessionById(Long id);
 
-    Session updateSessionById(Long id, Session session);
+    Session updateSessionById(Long id, SessionDTO updatedSessionDTO);
 
     void deleteSession(Long id);
 
