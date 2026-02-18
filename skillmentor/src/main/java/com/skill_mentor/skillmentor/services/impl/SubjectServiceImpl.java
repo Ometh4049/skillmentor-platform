@@ -44,7 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
 
     public Subject createSubject(Long MentorId, Subject subject){
         try {
-            
+
             Mentor mentor = mentorRepository.findById(MentorId)
                     .orElseThrow(()-> new SkillMentorException("Error find Mentor", HttpStatus.NOT_FOUND)
             );

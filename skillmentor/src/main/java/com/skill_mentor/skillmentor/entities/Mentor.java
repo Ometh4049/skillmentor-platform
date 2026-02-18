@@ -59,6 +59,10 @@ public class Mentor {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "mentor")
     private List<Subject> subjects;
+
+    @OneToMany(mappedBy = "mentor")
+    private List<Session> sessions;
 }
+
