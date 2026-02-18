@@ -24,11 +24,20 @@ public class StudentServiceImpl implements StudentService {
 
     public Student createNewStudent(Student student){
         try {
-            return studentRepository.save(student);
+//            return studentRepository.save(student);
+            // First save to generate ID
+            Student savedStudent = studentRepository.save(student);
+
+            // Generate studentId using generated DB id
+            String formattedId = String.format("STU-%04d", savedStudent.getId());
+
+            savedStudent.setStudentId(formattedId);
+
+            return studentRepository.save(savedStudent);
         }
         catch (DataIntegrityViolationException e) {
             log.error("Data integrity violation while creating student: {}", e.getMessage());
-            throw new SkillMentorException("student with this email already exists", HttpStatus.CONFLICT);
+            throw new SkillMentorException("student with this email already exists or Data integrity violation", HttpStatus.CONFLICT);
         }
         catch (Exception exception) {
             log.error("Failed to create new student", exception);
@@ -70,6 +79,8 @@ public class StudentServiceImpl implements StudentService {
         try {
             Student existingStudent = studentRepository.findById(id).orElseThrow(
                     ()->new SkillMentorException("Student Not Found",HttpStatus.NOT_FOUND));
+
+            updatedStudent.setStudentId(existingStudent.getStudentId());
 
             modelMapper.map(updatedStudent,existingStudent);
 
