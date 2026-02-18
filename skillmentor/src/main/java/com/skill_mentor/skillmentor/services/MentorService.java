@@ -1,12 +1,12 @@
 package com.skill_mentor.skillmentor.services;
 
 import com.skill_mentor.skillmentor.entities.Mentor;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MentorService {
 
-    List<Mentor> getAllMentors();
+    Page<Mentor> getAllMentors(String name, Pageable pageable);
 
     Mentor getMentorById(Long id);
 

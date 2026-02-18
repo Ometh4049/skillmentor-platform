@@ -1,5 +1,6 @@
 package com.skill_mentor.skillmentor.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +22,13 @@ public class Subject {
     @Column(nullable = false ,name = "subject_name" , length = 25)
     private String subjectName;
 
+    @Column(nullable = false)
     private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentor_id", nullable = false)
+    @JsonIgnore
+    private Mentor mentor;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false , updatable = false)

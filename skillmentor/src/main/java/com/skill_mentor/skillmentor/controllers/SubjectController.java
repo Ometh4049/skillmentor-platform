@@ -6,6 +6,8 @@ import com.skill_mentor.skillmentor.services.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +24,8 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @GetMapping
-    public List<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name){
-        return subjectService.getAllSubjects();
+    public Page<Subject> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name , Pageable pageable){
+        return subjectService.getAllSubjects(name, pageable);
     }
 
     @GetMapping("{id}")
@@ -34,15 +36,9 @@ public class SubjectController {
     @PostMapping
     public Subject createSubject(@Valid @RequestBody SubjectDTO subjectDTO){
 
-//        mapping subject DTO to subject
-//        Subject subject = new Subject();
-//        subject .setSubjectName(subjectDTO.getSubjectName());
-//        subject.setDescription(subjectDTO.getDescription());
-
-        // do that mapping using model mapper
         Subject subject = modelMapper.map(subjectDTO, Subject.class);
-
-        return subjectService.createSubject(subject);
+        subject.setId(null);
+        return subjectService.createSubject(subjectDTO.getMentorId(),subject);
     }
 
     @PutMapping("{id}")
@@ -50,7 +46,7 @@ public class SubjectController {
 
 
         Subject updatedSubject = modelMapper.map(subjectDTO,Subject.class);
-        return subjectService.updateSubject(id,updatedSubject);
+        return subjectService.updateSubjectById(id,updatedSubject);
 
     }
 
