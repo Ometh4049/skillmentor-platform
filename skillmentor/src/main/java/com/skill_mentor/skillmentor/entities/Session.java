@@ -16,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "session")
 public class Session {
-
+        
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

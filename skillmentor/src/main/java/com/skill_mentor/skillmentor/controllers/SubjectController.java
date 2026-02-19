@@ -28,7 +28,7 @@ public class SubjectController extends AbstractController{
     @GetMapping
     public ResponseEntity<Page<Subject>> getAllSubjects(@RequestParam(name="name" , defaultValue = "all") String name , Pageable pageable){
         Page<Subject> subjects =  subjectService.getAllSubjects(name, pageable);
-        return sendOkResponse(subjects);
+        return sendCreatedResponse(subjects);
     }
 
     @GetMapping("{id}")
