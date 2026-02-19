@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,19 +21,22 @@ public class MentorServiceImpl implements MentorService {
     private final MentorRepository mentorRepository;
     private final ModelMapper modelMapper;
 
-    public List<Mentor> getAllMentors(){
+    public Page<Mentor> getAllMentors(String name , Pageable pageable){
         try {
-            return mentorRepository.findAll();
+            if (name != null &&  !name.isEmpty() && !name.equalsIgnoreCase("all")) {
+                return mentorRepository.findByName(name, pageable);
+            }
+            return mentorRepository.findAll(pageable);
         } catch (Exception exception) {
             log.error("Failed to get all mentors", exception);
             throw new SkillMentorException("Failed to get all mentors", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     public Mentor getMentorById(Long id){
 
         try {
+
             Mentor mentor = mentorRepository.findById(id).orElseThrow(
                     ()->new SkillMentorException("Mentor Not Found",HttpStatus.NOT_FOUND)
             );

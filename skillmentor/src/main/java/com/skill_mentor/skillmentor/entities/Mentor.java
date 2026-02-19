@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -46,19 +47,23 @@ public class Mentor {
     private String bio;
 
     @Column(name = "availability_start", nullable = true)
-    private LocalDateTime availabilityStart;
+    private Date availabilityStart;
 
     @Column(name = "availability_end", nullable = true)
-    private LocalDateTime availabilityEnd;
+    private Date availabilityEnd;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false , updatable = false)
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @CreationTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "mentor")
     private List<Subject> subjects;
+
+    @OneToMany(mappedBy = "mentor")
+    private List<Session> sessions;
 }
+

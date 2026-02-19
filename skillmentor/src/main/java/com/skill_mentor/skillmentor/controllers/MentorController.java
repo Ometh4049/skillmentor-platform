@@ -6,11 +6,11 @@ import com.skill_mentor.skillmentor.services.MentorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path= "api/v1/mentors")
@@ -19,13 +19,14 @@ import java.util.List;
 public class MentorController extends AbstractController{
 
     private final ModelMapper modelMapper;
-
     private final MentorService mentorService;
 
 
     @GetMapping
-    public ResponseEntity<List<Mentor>> getAllMentors(){
-        List<Mentor> mentors =  mentorService.getAllMentors();
+    public ResponseEntity<Page<Mentor>> getAllMentors(
+            @RequestParam(name="name" ,required = false)
+            String name, Pageable pageable){
+        Page<Mentor> mentors =  mentorService.getAllMentors(name,pageable);
         return sendOkResponse(mentors);
     }
 

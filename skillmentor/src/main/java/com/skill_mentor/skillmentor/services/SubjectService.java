@@ -1,19 +1,20 @@
 package com.skill_mentor.skillmentor.services;
 
 import com.skill_mentor.skillmentor.entities.Subject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface SubjectService {
 
 
-    List<Subject> getAllSubjects();
+    Page<Subject> getAllSubjects(String name,Pageable pageable);
 
-    Subject createSubject(Subject subject);
+    Subject createSubject(Long MentorId, Subject subject);
 
     Subject getSubjectsById(Long id);
 
-    Subject updateSubject(Long id , Subject subject);
+    Subject updateSubjectById(Long id , Subject subject);
 
     void deleteSubject(Long id);
 }
