@@ -16,7 +16,6 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration()
                 .setSkipNullEnabled(true)
                 .setPropertyCondition(Conditions.isNotNull())
-                .setSkipNullEnabled(true)
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
 
 

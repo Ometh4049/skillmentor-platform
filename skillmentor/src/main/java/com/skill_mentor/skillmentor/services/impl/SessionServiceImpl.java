@@ -51,10 +51,25 @@ public class SessionServiceImpl implements SessionService {
             ValidationUtils.validateMentorAvailability(mentor, sessionDTO.getSessionAt(), sessionDTO.getDurationMinutes());
             ValidationUtils.validateStudentAvailability(student, sessionDTO.getSessionAt(), sessionDTO.getDurationMinutes());
 
-            Session session = modelMapper.map(sessionDTO, Session.class);
+//            Session session = modelMapper.map(sessionDTO, Session.class);
+//            session.setStudent(student);
+//            session.setMentor(mentor);
+//            session.setSubject(subject);
+
+            Session session = new Session();
+
+            session.setSessionAt(sessionDTO.getSessionAt());
+            session.setDurationMinutes(sessionDTO.getDurationMinutes());
+            session.setSessionStatus(sessionDTO.getSessionStatus());
+            session.setMeetingLink(sessionDTO.getMeetingLink());
+            session.setSessionNotes(sessionDTO.getSessionNotes());
+            session.setStudentReview(sessionDTO.getStudentReview());
+            session.setStudentRating(sessionDTO.getStudentRating());
+
             session.setStudent(student);
             session.setMentor(mentor);
             session.setSubject(subject);
+
 
             return sessionRepository.save(session);
 
