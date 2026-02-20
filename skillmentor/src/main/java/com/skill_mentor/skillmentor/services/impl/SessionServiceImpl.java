@@ -112,37 +112,68 @@ public class SessionServiceImpl implements SessionService {
 
     }
 
-    public Session updateSessionById(Long id, SessionDTO updatedSessionDTO){
+    public Session updateSessionById(Long id, SessionDTO updatedSessionDTO) {
+
         try {
 
-            Session session = sessionRepository.findById(id).orElseThrow(
-                    ()->new SkillMentorException("Session Not Found",HttpStatus.NOT_FOUND));
+            Session session = sessionRepository.findById(id)
+                    .orElseThrow(() -> new SkillMentorException("Session Not Found", HttpStatus.NOT_FOUND));
 
-            modelMapper.map(updatedSessionDTO, session);
+            // Update simple fields safely
+            if (updatedSessionDTO.getSessionAt() != null) {
+                session.setSessionAt(updatedSessionDTO.getSessionAt());
+            }
 
-            // Update the related entities
+            if (updatedSessionDTO.getDurationMinutes() != null) {
+                session.setDurationMinutes(updatedSessionDTO.getDurationMinutes());
+            }
+
+            if (updatedSessionDTO.getSessionStatus() != null) {
+                session.setSessionStatus(updatedSessionDTO.getSessionStatus());
+            }
+
+            if (updatedSessionDTO.getMeetingLink() != null) {
+                session.setMeetingLink(updatedSessionDTO.getMeetingLink());
+            }
+
+            if (updatedSessionDTO.getSessionNotes() != null) {
+                session.setSessionNotes(updatedSessionDTO.getSessionNotes());
+            }
+
+            if (updatedSessionDTO.getStudentReview() != null) {
+                session.setStudentReview(updatedSessionDTO.getStudentReview());
+            }
+
+            if (updatedSessionDTO.getStudentRating() != null) {
+                session.setStudentRating(updatedSessionDTO.getStudentRating());
+            }
+
+            // Update relationships explicitly
             if (updatedSessionDTO.getStudentId() != null) {
                 Student student = studentRepository.findById(updatedSessionDTO.getStudentId())
                         .orElseThrow(() -> new SkillMentorException("Student not found", HttpStatus.NOT_FOUND));
                 session.setStudent(student);
             }
+
             if (updatedSessionDTO.getMentorId() != null) {
                 Mentor mentor = mentorRepository.findById(updatedSessionDTO.getMentorId())
-                        .orElseThrow(() -> new SkillMentorException("Student not found", HttpStatus.NOT_FOUND));
+                        .orElseThrow(() -> new SkillMentorException("Mentor not found", HttpStatus.NOT_FOUND));
                 session.setMentor(mentor);
             }
+
             if (updatedSessionDTO.getSubjectId() != null) {
                 Subject subject = subjectRepository.findById(updatedSessionDTO.getSubjectId())
-                        .orElseThrow(() -> new SkillMentorException("Student not found", HttpStatus.NOT_FOUND));
+                        .orElseThrow(() -> new SkillMentorException("Subject not found", HttpStatus.NOT_FOUND));
                 session.setSubject(subject);
             }
 
             return sessionRepository.save(session);
-        }catch (SkillMentorException skillMentorException) {
-            log.warn("Session not found with id: {} to update", id, skillMentorException);
-            throw new SkillMentorException("Session Not Found", HttpStatus.NOT_FOUND);
-        }catch (Exception exception) {
-            log.error("Failed to update session", exception);
+
+        } catch (SkillMentorException e) {
+            log.warn("Session not found with id: {} to update", id, e);
+            throw e;
+        } catch (Exception e) {
+            log.error("Failed to update session", e);
             throw new SkillMentorException("Failed to update session", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
