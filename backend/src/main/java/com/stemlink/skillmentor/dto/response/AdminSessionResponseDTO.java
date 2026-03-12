@@ -5,16 +5,17 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class SessionResponseDTO {
+public class AdminSessionResponseDTO {
     private Integer id;
+    private String studentName;
+    private String studentEmail;
     private String mentorName;
-    private String mentorProfileImageUrl;
+    private String mentorEmail;
     private String subjectName;
     private Date sessionAt;
     private Integer durationMinutes;
-    private String sessionStatus;
     private String paymentStatus;
+    private String sessionStatus;
     private String meetingLink;
-    private Integer studentRating;
-    private String studentReview;
 }
+

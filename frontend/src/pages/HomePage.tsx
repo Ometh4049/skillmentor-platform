@@ -10,11 +10,18 @@ export default function HomePage() {
   const { isSignedIn } = useAuth();
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getPublicMentors()
       .then((data) => setMentors(data.content))
-      .catch(console.error)
+      .catch((err) => {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load mentors. Please try again.",
+        );
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -56,6 +63,8 @@ export default function HomePage() {
           <div className="text-center py-10 text-muted-foreground">
             Loading mentors...
           </div>
+        ) : error ? (
+          <div className="text-center py-10 text-destructive">{error}</div>
         ) : mentors.length === 0 ? (
           <div className="text-center py-10 text-muted-foreground">
             No mentors available yet.

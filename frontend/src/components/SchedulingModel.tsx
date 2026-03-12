@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Calendar } from "./ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,11 +10,13 @@ import {
 } from "./ui/dialog";
 import { useNavigate } from "react-router";
 import type { Mentor } from "@/types";
+import { useToast } from "./hooks/use-toast";
 
 interface SchedulingModalProps {
   isOpen: boolean;
   onClose: () => void;
   mentor: Mentor;
+  initialSubjectId?: number;
 }
 
 const TIME_SLOTS = [
@@ -32,13 +34,32 @@ export function SchedulingModal({
   isOpen,
   onClose,
   mentor,
+  initialSubjectId,
 }: SchedulingModalProps) {
   const [date, setDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState<string>();
+  const [selectedSubjectId, setSelectedSubjectId] = useState<number | undefined>(
+    initialSubjectId ?? mentor.subjects[0]?.id,
+  );
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const mentorName = `${mentor.firstName} ${mentor.lastName}`;
-  const subject = mentor.subjects[0];
+  const today = useMemo(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return now;
+  }, []);
+  const subject =
+    mentor.subjects.find((item) => item.id === selectedSubjectId) ??
+    mentor.subjects[0];
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setDate(undefined);
+    setSelectedTime(undefined);
+    setSelectedSubjectId(initialSubjectId ?? mentor.subjects[0]?.id);
+  }, [initialSubjectId, isOpen, mentor.subjects]);
 
   const handleSchedule = () => {
     if (date && selectedTime && subject) {
@@ -49,14 +70,23 @@ export function SchedulingModal({
         Number.parseInt(minutes),
       );
 
+      if (sessionDateTime < new Date()) {
+        toast({
+          title: "Invalid date/time",
+          description: "Please pick a future session date and time.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const sessionId = `${mentor.id}-${Date.now()}`;
       const searchParams = new URLSearchParams({
         date: sessionDateTime.toISOString(),
-        courseTitle: subject?.subjectName ?? "",
+        courseTitle: subject.subjectName ?? "",
         mentorName: mentorName,
         mentorId: mentor.mentorId,
         mentorImg: mentor.profileImageUrl ?? "",
-        subjectId: String(subject?.id ?? ""),
+        subjectId: String(subject.id ?? ""),
       });
       navigate(`/payment/${sessionId}?${searchParams.toString()}`);
     }
@@ -73,11 +103,24 @@ export function SchedulingModal({
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
+            <h4 className="font-medium mb-2">Subject</h4>
+            <select
+              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm mb-4"
+              value={selectedSubjectId}
+              onChange={(e) => setSelectedSubjectId(Number(e.target.value))}
+            >
+              {mentor.subjects.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.subjectName}
+                </option>
+              ))}
+            </select>
             <h4 className="font-medium mb-2">Choose a date</h4>
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
+              disabled={{ before: today }}
               className="rounded-md border"
             />
           </div>

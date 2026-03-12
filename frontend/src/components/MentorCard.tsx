@@ -13,6 +13,7 @@ import { SchedulingModal } from "@/components/SchedulingModel";
 import { SignupDialog } from "@/components/SignUpDialog";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/clerk-react";
+import { Link } from "react-router";
 
 interface MentorCardProps {
   mentor: Mentor;
@@ -64,7 +65,9 @@ export function MentorCard({ mentor }: MentorCardProps) {
                     {mentor.firstName.charAt(0)}
                   </div>
                 )}
-                <span className="text-sm">{mentorName}</span>
+                <Link to={`/mentors/${mentor.mentorId}`} className="text-sm hover:underline">
+                  {mentorName}
+                </Link>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Building2 className="size-6" />
@@ -134,6 +137,11 @@ export function MentorCard({ mentor }: MentorCardProps) {
         </div>
 
         <div className="p-6 pt-0">
+          <Link to={`/mentors/${mentor.mentorId}`}>
+            <Button variant="outline" className="w-full mb-2">
+              View Profile
+            </Button>
+          </Link>
           <Button
             onClick={handleSchedule}
             className="w-full bg-black text-white hover:bg-black/90"
@@ -154,6 +162,7 @@ export function MentorCard({ mentor }: MentorCardProps) {
         isOpen={isSchedulingModalOpen}
         onClose={() => setIsSchedulingModalOpen(false)}
         mentor={mentor}
+        initialSubjectId={mentor.subjects[0]?.id}
       />
     </>
   );

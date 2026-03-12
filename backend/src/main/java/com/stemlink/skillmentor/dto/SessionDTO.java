@@ -2,6 +2,7 @@ package com.stemlink.skillmentor.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,8 +13,8 @@ public class SessionDTO {
     @NotNull(message = "Student ID cannot be null")
     private Integer studentId;
 
-    @NotNull(message = "Mentor ID cannot be null")
-    private Long mentorId;
+    @NotBlank(message = "Mentor ID cannot be blank")
+    private String mentorId;
 
     @NotNull(message = "Subject ID cannot be null")
     private Long subjectId;
