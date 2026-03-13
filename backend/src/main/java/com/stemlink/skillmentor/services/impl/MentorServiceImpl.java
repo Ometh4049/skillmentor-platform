@@ -37,7 +37,17 @@ public class MentorServiceImpl implements MentorService {
             return mentorRepository.save(mentor);
         } catch (DataIntegrityViolationException e) {
             log.error("Data integrity violation while creating mentor: {}", e.getMessage());
-            throw new SkillMentorException("Mentor with this email already exists", HttpStatus.CONFLICT);
+            String errorMessage = "Mentor data violates database constraints";
+            String cause = e.getMostSpecificCause() != null ? e.getMostSpecificCause().getMessage() : "";
+            String normalizedCause = cause != null ? cause.toLowerCase() : "";
+
+            if (normalizedCause.contains("duplicate key") || normalizedCause.contains("already exists")) {
+                errorMessage = "Mentor with this email already exists";
+            } else if (normalizedCause.contains("value too long")) {
+                errorMessage = "One of the fields is too long. Use a shorter value or an image URL for profile image.";
+            }
+
+            throw new SkillMentorException(errorMessage, HttpStatus.CONFLICT);
         } catch (Exception exception) {
             log.error("Failed to create new mentor", exception);
             throw new SkillMentorException("Failed to create new mentor", HttpStatus.INTERNAL_SERVER_ERROR);

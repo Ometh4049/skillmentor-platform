@@ -28,6 +28,7 @@ const initialForm = {
 };
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024;
 
 export default function CreateMentorPage() {
   const { getToken } = useAuth();
@@ -45,6 +46,51 @@ export default function CreateMentorPage() {
     if (!form.email.trim() || !emailRegex.test(form.email)) return "A valid email is required.";
     if (!form.startYear.trim()) return "Start year is required.";
     return null;
+  };
+
+  const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Invalid image",
+        description: "Please choose a valid image file.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      toast({
+        title: "Image too large",
+        description: "Please choose an image smaller than 2MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === "string" ? reader.result : "";
+      if (!result) {
+        toast({
+          title: "Upload failed",
+          description: "Could not read the selected image.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setForm((prev) => ({ ...prev, profileImageUrl: result }));
+    };
+    reader.onerror = () => {
+      toast({
+        title: "Upload failed",
+        description: "Could not read the selected image.",
+        variant: "destructive",
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,19 +145,40 @@ export default function CreateMentorPage() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="mentorId">Mentor ID</Label>
-            <Input id="mentorId" value={form.mentorId} onChange={(e) => setForm((p) => ({ ...p, mentorId: e.target.value }))} />
+            <Input
+              id="mentorId"
+              required
+              value={form.mentorId}
+              onChange={(e) => setForm((p) => ({ ...p, mentorId: e.target.value }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={form.email} onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} />
+            <Input
+              id="email"
+              required
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" value={form.firstName} onChange={(e) => setForm((p) => ({ ...p, firstName: e.target.value }))} />
+            <Input
+              id="firstName"
+              required
+              value={form.firstName}
+              onChange={(e) => setForm((p) => ({ ...p, firstName: e.target.value }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" value={form.lastName} onChange={(e) => setForm((p) => ({ ...p, lastName: e.target.value }))} />
+            <Input
+              id="lastName"
+              required
+              value={form.lastName}
+              onChange={(e) => setForm((p) => ({ ...p, lastName: e.target.value }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Phone Number</Label>
@@ -141,7 +208,14 @@ export default function CreateMentorPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="startYear">Start Year</Label>
-            <Input id="startYear" value={form.startYear} onChange={(e) => setForm((p) => ({ ...p, startYear: e.target.value }))} />
+            <Input
+              id="startYear"
+              type="number"
+              min={1980}
+              max={new Date().getFullYear()}
+              value={form.startYear}
+              onChange={(e) => setForm((p) => ({ ...p, startYear: e.target.value }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="profileImageUrl">Profile Image URL</Label>
@@ -149,6 +223,15 @@ export default function CreateMentorPage() {
               id="profileImageUrl"
               value={form.profileImageUrl}
               onChange={(e) => setForm((p) => ({ ...p, profileImageUrl: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="profileImageUpload">Or Upload Profile Image</Label>
+            <Input
+              id="profileImageUpload"
+              type="file"
+              accept="image/*"
+              onChange={handleProfileImageUpload}
             />
           </div>
           <div className="space-y-2">

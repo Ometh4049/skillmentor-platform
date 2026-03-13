@@ -56,7 +56,7 @@ public class Mentor implements Serializable {
     private String bio;
 
     // Additional fields required for frontend mentor profile displays
-    @Column(name = "profile_image_url")
+    @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
     @Column(name = "positive_reviews")
