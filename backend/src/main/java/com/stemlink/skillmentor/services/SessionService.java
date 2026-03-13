@@ -15,7 +15,7 @@ public interface SessionService {
 
     Session createNewSession(SessionDTO sessionDTO);
 
-    List<Session> getAllSessions();
+    Page<Session> getAllSessions(Pageable pageable);
 
     Session getSessionById(Integer id);
 

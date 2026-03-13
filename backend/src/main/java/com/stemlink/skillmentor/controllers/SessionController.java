@@ -39,8 +39,8 @@ public class SessionController extends AbstractController {
     private final SessionService sessionService;
 
     @GetMapping
-    public List<Session> getAllSessions() {
-        return sessionService.getAllSessions();
+    public Page<Session> getAllSessions(Pageable pageable) {
+        return sessionService.getAllSessions(pageable);
     }
 
     @GetMapping("{id}")
