@@ -49,16 +49,16 @@ export default function PaymentPage() {
       if (!token) throw new Error("Not authenticated");
 
       await enrollInSession(token, {
-        mentorId: Number(mentorId),
+        mentorId,
         subjectId: Number(subjectId),
         sessionAt: date,
         durationMinutes: 60,
       });
 
       toast({
-        title: "Payment Confirmed",
+        title: "Booking Submitted",
         description:
-          "Your bank slip has been uploaded and verified. Session scheduled successfully.",
+          "Your session request is submitted and pending admin confirmation.",
       });
 
       setTimeout(() => {
@@ -68,7 +68,9 @@ export default function PaymentPage() {
       toast({
         title: "Error",
         description:
-          "There was a problem scheduling your session. Please try again.",
+          error instanceof Error
+            ? error.message
+            : "There was a problem scheduling your session. Please try again.",
         variant: "destructive",
       });
       setIsUploading(false);

@@ -15,6 +15,6 @@ public class SubjectDTO {
 
     private String courseImageUrl;
 
-    @NotNull
-    private Long mentorId;
+    @NotBlank(message = "Mentor ID is required")
+    private String mentorId;
 }

@@ -1,15 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import { useAuth, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useAuth, SignInButton, UserButton, useUser } from "@clerk/clerk-react";
 import SkillMentorLogo from "@/assets/logo.webp";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
+function hasAdminRole(metadata: Record<string, unknown> | undefined): boolean {
+  if (!metadata) return false;
+  const role = metadata.role;
+  const roles = metadata.roles;
+
+  if (typeof role === "string" && role.toLowerCase() === "admin") {
+    return true;
+  }
+
+  if (Array.isArray(roles)) {
+    return roles.some((item) => typeof item === "string" && item.toLowerCase() === "admin");
+  }
+
+  return false;
+}
+
 export function Navigation() {
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
+  const isAdmin = hasAdminRole(user?.publicMetadata as Record<string, unknown> | undefined);
 
   const NavItems = ({ mobile = false }: { mobile?: boolean }) => (
     <nav
@@ -60,6 +78,17 @@ export function Navigation() {
               Dashboard
             </Button>
           </Link>
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className={cn(mobile && "w-full")}
+              onClick={() => mobile && setIsOpen(false)}
+            >
+              <Button variant="ghost" className={cn(mobile && "w-full")}>
+                Admin
+              </Button>
+            </Link>
+          )}
           <div
             className={cn(
               "flex items-center",

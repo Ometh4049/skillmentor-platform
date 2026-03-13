@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,7 +47,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             List<String> roles = tokenValidator.extractRoles(token);
             List<GrantedAuthority> authorities = roles != null ?
                     roles.stream()
-                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                            .map(role -> role.toUpperCase(Locale.ROOT))
+                            .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
+                            .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList()) :
                     new ArrayList<>();
 

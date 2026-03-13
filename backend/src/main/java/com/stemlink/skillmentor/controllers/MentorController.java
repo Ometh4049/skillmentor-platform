@@ -1,6 +1,7 @@
 package com.stemlink.skillmentor.controllers;
 
 import com.stemlink.skillmentor.dto.MentorDTO;
+import com.stemlink.skillmentor.dto.response.MentorProfileResponseDTO;
 import com.stemlink.skillmentor.entities.Mentor;
 import com.stemlink.skillmentor.security.UserPrincipal;
 import com.stemlink.skillmentor.services.MentorService;
@@ -14,8 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.stemlink.skillmentor.constants.UserRoles.*;
 
@@ -41,6 +40,12 @@ public class MentorController extends AbstractController {
     public ResponseEntity<Mentor> getMentorById(@PathVariable Long id) {
         Mentor mentor = mentorService.getMentorById(id);
         return sendOkResponse(mentor);
+    }
+
+    @GetMapping("/profile/{mentorId}")
+    public ResponseEntity<MentorProfileResponseDTO> getMentorProfile(@PathVariable String mentorId) {
+        MentorProfileResponseDTO mentorProfile = mentorService.getMentorProfileByMentorId(mentorId);
+        return sendOkResponse(mentorProfile);
     }
 
     @PostMapping
